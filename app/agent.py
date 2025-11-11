@@ -13,16 +13,16 @@ load_dotenv()
 class Agent():
     
     def __init__(self):
-        self.groq_llm = ChatGroq(model="llama-3.3-70b-versatile" , temperature=0.5)
+        self.groq_llm = ChatGroq(model="llama-3.3-70b-versatile" , temperature=0.5 , timeout=5000)
         self.gemini_model = init_chat_model("google_genai:gemini-2.5-flash" , temperature=0.5)
         self.model = self.groq_llm   
         
     def load_doc(self, saved_path, uploaded_file ):
         """Test function to load and return content from an uploaded file."""
         if uploaded_file.name.endswith(".txt"):
-            loader = TextLoader(saved_path)
+            loader = TextLoader(saved_path , encoding='utf-8' ,autodetect_encoding=True)
         elif uploaded_file.name.endswith(".pdf"):
-            loader = TextLoader(saved_path)
+            loader = TextLoader(saved_path , encoding='utf-8' ,autodetect_encoding=True)
         elif uploaded_file.name.endswith(".docx"):
             loader = TextLoader(saved_path)
         elif uploaded_file.name.endswith(".csv"):
