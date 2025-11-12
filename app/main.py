@@ -549,7 +549,7 @@ def main():
         
         with st.spinner("🔍 Analyzing document and generating intelligent response..."):
             file_path = store.save_file(file=enter_doc)
-            document = agent.load_doc(saved_path=file_path, uploaded_file=enter_doc)
+            document = agent.test_load_doc(saved_path=file_path, uploaded_file=enter_doc)
             vectorstore = store.create_vector_db(documents=document)
             retriever = store.create_retriever(vectorstore=vectorstore)
             model = agent.groq_llm
