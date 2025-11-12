@@ -26,6 +26,9 @@ venv/
 env/
 ENV/
 
+# --- sample documents ----
+sample_docs/
+
 # --- System files ---
 .DS_Store
 Thumbs.db
