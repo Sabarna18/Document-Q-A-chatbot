@@ -6,6 +6,7 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain.chat_models import init_chat_model
 from langchain_community.document_loaders import TextLoader , PyPDFLoader, Docx2txtLoader, CSVLoader
 from langchain_core.documents import Document
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 import tempfile , fitz
 import os
 from tika import parser
@@ -45,9 +46,10 @@ class Agent():
             text += f"\n--- Page {page_num + 1} ---\n"
             text += page.get_text()
         doc.close()
-
-        data = Document(page_content=text , metadata={"source": saved_path})  
-        return [data]     
+        data = Document(page_content=text , metadata={"source": saved_path}) 
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+        texts = text_splitter.split_documents([data]) 
+        return texts    
             
     def format_docs(self , docs):
         return "\n\n".join([doc.page_content for doc in docs])

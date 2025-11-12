@@ -25,9 +25,14 @@ venv/
 .venv/
 env/
 ENV/
+myenv/
+.myenv
 
 # --- sample documents ----
 sample_docs/
+
+#--- persistent vector stores ---
+hf_Chroma_Store
 
 # --- System files ---
 .DS_Store
