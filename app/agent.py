@@ -5,8 +5,10 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from langchain.chat_models import init_chat_model
 from langchain_community.document_loaders import TextLoader , PyPDFLoader, Docx2txtLoader, CSVLoader
+from langchain_core.documents import Document
 import tempfile
 import os
+from tika import parser
 
 load_dotenv()
 
@@ -14,8 +16,7 @@ class Agent():
     
     def __init__(self):
         self.groq_llm = ChatGroq(model="llama-3.3-70b-versatile" , temperature=0.5 , timeout=5000)
-        self.gemini_model = init_chat_model("google_genai:gemini-2.5-flash" , temperature=0.5)
-        self.model = self.groq_llm   
+        self.gemini_model = init_chat_model("google_genai:gemini-2.5-flash" , temperature=0.5)   
         
     def load_doc(self, saved_path, uploaded_file ):
         """Test function to load and return content from an uploaded file."""
@@ -23,8 +24,11 @@ class Agent():
             loader = TextLoader(saved_path , encoding='utf-8' ,autodetect_encoding=True)
         elif uploaded_file.name.endswith(".pdf"):
             loader = TextLoader(saved_path , encoding='utf-8' ,autodetect_encoding=True)
+            raw = parser.from_file(saved_path )
+            data = Document(page_content=raw['content'] , metadata={"source": saved_path})
+            return [data]
         elif uploaded_file.name.endswith(".docx"):
-            loader = TextLoader(saved_path)
+            loader = TextLoader(saved_path , encoding='utf-8' ,autodetect_encoding=True)
         elif uploaded_file.name.endswith(".csv"):
             loader = CSVLoader(saved_path)
         else:

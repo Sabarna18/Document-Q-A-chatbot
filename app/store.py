@@ -1,16 +1,19 @@
 from langchain_community.vectorstores import Chroma
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from langchain_huggingface.embeddings import HuggingFaceEmbeddings
 import os
 from langchain_community.document_loaders import TextLoader, PyPDFLoader, Docx2txtLoader, CSVLoader
 
 class Store():
 
     def __init__(self):
-        self.embeddings =  GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
+        # self.hf_embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
+        self.google_embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
     
     def create_vector_db(self , documents):
-        vectorstore = Chroma.from_documents(documents=documents , embedding=self.embeddings , persist_directory="Chroma_Store")
-        return vectorstore
+        # hf_vectorstore = Chroma.from_documents(documents=documents , embedding=self.hf_embeddings , persist_directory="hf_Chroma_Store")
+        google_vectorstore = Chroma.from_documents(documents=documents , embedding=self.google_embeddings , persist_directory="Chroma_Store")
+        return google_vectorstore
     
     def create_retriever(self , vectorstore):
         retriever = vectorstore.as_retriever( search_type="similarity" ,search_kwargs={"k":3})
